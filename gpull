@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import json
+import subprocess
+import os
+import argparse
+
+# Wrapper for git pull that can pull from any directory
+
+parser = argparse.ArgumentParser()
+parser.add_argument(action='store', dest='repo',
+                    help='Repository path')
+
+results = parser.parse_args()
+proc = subprocess.Popen(['git', 'pull'], cwd=results.repo)
+
+try:
+    outs, errs = proc.communicate(timeout=15)
+
+except:
+    proc.kill()
+    outs, errs = proc.communicate()

@@ -1,0 +1,17 @@
+[Unit]
+Description=A service that pulls updates automatically from github, related to webhook_handler.service
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+User=pi
+PermissionsStartOnly=true
+ExecStart=/home/pi/projects/Rasp_Autopull/venv/bin/python -u gpull_service.py
+WorkingDirectory=/home/pi/projects/Rasp_Autopull/
+StandardOutput=journal+console
+StandardError=journal+console
+TimeoutSec=600
+Restart=always
+RuntimeDirectoryMode=755

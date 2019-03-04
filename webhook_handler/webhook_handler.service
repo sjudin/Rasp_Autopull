@@ -1,0 +1,17 @@
+[Unit]
+Description=Flask server to recieve webhooks from github
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+User=pi
+PermissionsStartOnly=true
+ExecStart=/home/pi/projects/Rasp_Autopull/venv/bin/python -u WebhookHandler.py
+WorkingDirectory=/home/pi/projects/Rasp_Autopull/webhook_handler
+StandardOutput=journal+console
+StandardError=journal+console
+TimeoutSec=600
+Restart=on-failure
+RuntimeDirectoryMode=755

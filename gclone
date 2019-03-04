@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+
+import subprocess
+import argparse
+import json
+import os
+
+# Simple wrapper for git clone that also adds the cloned repo into a list of tracked repos
+# Tracked repos are used to keep track of which repos should be updated automatically
+
+REPOS_PATH = '/home/pi/projects/Rasp_Autopull/'
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(action='store', dest='repo_url',
+                    help='Repository url')
+
+parser.add_argument('-s', nargs='?', default=None, action='store', dest='service_name',
+                    help='Service name as <yourservice.service>')
+
+parser.add_argument('-w', '--webhook', action='store_true', help='Specify this if you want to add a webhook to the github repo you are pulling')
+
+results = parser.parse_args()
+proc = subprocess.Popen(['git', 'clone' , results.repo_url])
+
+data = json.loads(open(REPOS_PATH + 'repos').read())
+repo = results.repo_url.split('/')[-1].split('.git')[0]
+service = results.service_name
+
+try:
+    outs, errs = proc.communicate(timeout=15)
+
+    data[repo] = dict()
+    data[repo]['path'] = os.getcwd() + '/' + repo
+    data[repo]['service'] = service
+
+    if results.webhook:
+        # Add new webhook to the repo that was just pulled
+        print('Enter password to add webhook')
+        webhook_proc = subprocess.Popen(['curl', '-u', 'sjudin', '-d', '@'+REPOS_PATH+'data.json', '-X', 'POST', 'https://api.github.com/repos/sjudin/'+repo+'/hooks'])
+        webhook_proc.communicate(timeout=15)
+
+    with open(REPOS_PATH + 'repos', 'w') as f:
+        json.dump(data, f)
+        
+except:
+    proc.kill()
+    outs, errs = proc.communicate()	
