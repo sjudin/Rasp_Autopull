@@ -18,6 +18,9 @@ parser.add_argument(action='store', dest='repo_url',
 parser.add_argument('-s', nargs='?', default=None, action='store', dest='service_name',
                     help='Service name as <yourservice.service>')
 
+parser.add_argument('-b', nargs='?', default='master', action='store', dest='branch',
+                    help='Specify this if you only want to pull when a push is done to a specific branch, defaults to master')
+
 parser.add_argument('-w', '--webhook', action='store_true', help='Specify this if you want to add a webhook to the github repo you are pulling')
 
 results = parser.parse_args()
@@ -25,14 +28,14 @@ proc = subprocess.Popen(['git', 'clone' , results.repo_url])
 
 data = json.loads(open(REPOS_PATH + 'repos').read())
 repo = results.repo_url.split('/')[-1].split('.git')[0]
-service = results.service_name
 
 try:
     outs, errs = proc.communicate(timeout=15)
 
     data[repo] = dict()
     data[repo]['path'] = os.getcwd() + '/' + repo
-    data[repo]['service'] = service
+    data[repo]['service'] = results.service_name 
+    data[repo]['branch'] = results.branch
 
     if results.webhook:
         # Add new webhook to the repo that was just pulled

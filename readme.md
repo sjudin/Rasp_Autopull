@@ -40,14 +40,13 @@ git config --global credential.helper store
 ## Usage
 Clone a repo with:
 ```
-gclone -w -s  <service_name.service> <clone_url>
+gclone -w -s  <service_name.service> -b <branch_name> <clone_url>
 ```
-This will add it to the list of watched repos, the -s flag is used if you want to specify a systemctl service that you wish to RESTART each time you push to the repo, -s is optional. -w is used if you want to add a webhook to the github repository, if this flag is set you will be prompted for your github password when cloning.
+This will add it to the list of watched repos, the -s flag is used if you want to specify a systemctl service that you wish to RESTART each time you push to the repo, -s is optional. -w is used if you want to add a webhook to the github repository, if this flag is set you will be prompted for your github password when cloning. -b is used to specify a branch that you want to track, defaults to master.
 Now you are pretty much ready to go, just push to your repo from anywhere and it will pull to your pi automatically!
 
 
 ## Todo
-* Handle branches
 * Figure out better way to pull repos without password
 * Create config file
 * Make install bash script

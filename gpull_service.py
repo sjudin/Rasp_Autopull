@@ -35,10 +35,10 @@ while True:
         data = json.loads(my_json)
 
         # pprint.pprint(data)
+        repo = tracked_repos.get(data['repository']['name'], None)
 
-        # Check if incoming commit is part of a tracked repo
-        if data['repository']['name'] in tracked_repos.keys():
-            repo = tracked_repos[data['repository']['name']]
+        # Check if incoming commit is part of a tracked repo and is the correct branch
+        if repo and repo['branch'] in data['ref']:
             pull_proc = subprocess.Popen(['gpull', repo['path']])
 
             # If user has related a service to the pull, we restart the service aswell
