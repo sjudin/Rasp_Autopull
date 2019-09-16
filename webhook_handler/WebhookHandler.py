@@ -16,4 +16,4 @@ def webhook_handler():
 	return ('', 204) 
 
 if __name__ == "__main__":
-	app.run(host="192.168.0.101")
+	app.run(host="192.168.0.100", port=13507)

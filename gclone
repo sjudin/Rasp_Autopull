@@ -44,7 +44,7 @@ try:
         webhook_proc.communicate(timeout=15)
 
     with open(REPOS_PATH + 'repos', 'w') as f:
-        json.dump(data, f)
+        json.dump(data, f, indent=4)
         
 except:
     proc.kill()
