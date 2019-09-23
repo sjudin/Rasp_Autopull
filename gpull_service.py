@@ -39,6 +39,8 @@ while True:
 
         # Check if incoming commit is part of a tracked repo and is the correct branch
         if repo and repo['branch'] in data['ref']:
+            checkout_proc = subprocess.Popen(['git', 'checkout', '--', '.'],
+                                             cwd=repo['path'])
             pull_proc = subprocess.Popen(['gpull', repo['path']])
 
             # If user has related a service to the pull, we restart the service aswell
@@ -49,9 +51,11 @@ while True:
                 print('restarted service', repo['service'])
 
             try:
+                outs, errs = checkout_proc.communicate(timeout=15)
                 outs, errs = pull_proc.communicate(timeout=15)
             except:
                 proc.kill()
+                outs, errs = checkout_proc.communicate()
                 outs, errs = pull_proc.communicate()
 
     # Lets not fry the CPU
