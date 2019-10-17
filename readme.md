@@ -1,7 +1,7 @@
 # Auto deployment utility for Raspberry
 
 ## How it works
-WebHookHandler.py runs a flask server on port 5000 that recieves webhooks from github whenever a repo has been pushed to. You need to manually register the webhook on github.
+WebHookHandler.py runs a flask server on port 13507 that recieves webhooks from github whenever a repo has been pushed to. You need to manually register the webhook on github.
 The correct endpoint to send the post request to is
 ```
 http://<your_url_or_ip>:5000/github_webhooks
@@ -15,7 +15,7 @@ gclone clones a repo and adds the repo to "repos" so that it can be tracked by g
 
 ## Setup
 add gclone and gpull to the path, they have no dependencies outside of python3s standard library. Set up a python3 virtual environment from requirements.txt
-make sure that a redis-server is running on port 6379, preferable is to set it up to run as a service: https://gist.github.com/mkocikowski/aeca878d58d313e902bb
+make sure that a redis-server is running on port 6379, it is preferable is to set it up to run as a service: https://gist.github.com/mkocikowski/aeca878d58d313e902bb
 copy webhook_handler.service into /etc/systemd/system/:
 ```
 sudo cp webhook_handler.service /etc/systemd/system
